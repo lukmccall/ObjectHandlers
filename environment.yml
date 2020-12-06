@@ -1,0 +1,8 @@
+name: cling
+channels:
+  - conda-forge
+dependencies:
+  - jupyter
+  - jupyter_contrib_nbextensions
+  - rise
+  - xeus-cling
