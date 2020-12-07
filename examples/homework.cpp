@@ -242,8 +242,8 @@ LazyVectorNode<A, B, DivOperation> operator/(A&& a, B&& b) {
 
 int main() {
   Vector<int> v1{1, 2, 3, 4, 5, 6};
-  std::cout << v1 << std::endl;  // 1, 2, 3, 4, 5 ,6
-  Vector<int> v2 = v1; // Copy constr
+  std::cout << v1 << std::endl; // 1, 2, 3, 4, 5 ,6
+  Vector<int> v2 = v1;          // Copy constr
 
   assert(v2[2] == 3);
 
@@ -275,6 +275,19 @@ int main() {
     assert(v3[i] == i);
   }
 
+  std::shared_ptr<Vector<int>> sharedVector = std::make_shared<Vector<int>>(); // Default constr
+  assert(sharedVector.use_count() == 1);
+  std::shared_ptr<Vector<int>> secondSharedVector = sharedVector->getPtr();
+
+  assert(sharedVector.use_count() == 2);
+  try {
+    Vector<int> vec; // Default constr
+    std::shared_ptr<Vector<int>> sp = vec.getPtr();
+    assert(false);
+  } catch(std::bad_weak_ptr& e) {
+    std::cout << e.what() << std::endl; // bad_weak_ptr
+  }
+
   Vector<int> v4 = (v3 + Vector{9, 8, 7}) * v1; // Default constr
   Vector<int> result4{9, 18, 27, 12, 20, 30, 6, 7, 8, 9, 10, 11, 12, 13, 14};
   cout << v4 << std::endl; // 9 18 27 12 20 30 6 7 8 9 10 11 12 13 14
@@ -301,7 +314,7 @@ int main() {
 
   auto temp7 = v1 + v1;
   v1[0] = 10;
-  Vector<int> v7 = temp7; // Default constr
+  Vector<int> v7 = temp7;       // Default constr
   std::cout << v7 << std::endl; // 20 4 6 8 10 12
   assert(v7[0] == 20);
 }
@@ -310,6 +323,9 @@ int main() {
 1 2 3 4 5 6
 Copy constr
 Move operator
+Default constr
+Default constr
+bad_weak_ptr
 Default constr
 9 18 27 12 20 30 6 7 8 9 10 11 12 13 14
 Default constr
